@@ -154,7 +154,7 @@ main { max-width: 560px; margin: 0 auto; padding: 16px 16px calc(32px + env(safe
   <section class="card" id="details" aria-labelledby="detailsTitle">
     <h2 id="detailsTitle">Your details</h2>
     <dl class="auto">
-      <dt>Shop</dt><dd id="autoShop"></dd>
+      <dt>Branch</dt><dd id="autoShop"></dd>
       <dt>Date</dt><dd id="autoDate"></dd>
     </dl>
     <div class="field">
@@ -233,6 +233,8 @@ function runApp(BOOT) {
 
   /* ---------- Setup ---------- */
   const SHOP = BOOT.shop;
+  const BUSINESS = BOOT.business || '';
+  const DISPLAY_NAME = BUSINESS ? BUSINESS + ' · ' + SHOP.name : SHOP.name;
   const NIGHT = BOOT.night;
   const SECTIONS = BOOT.sections;
   const STORE_PREFIX = 'close-report:' + SHOP.code + ':';
@@ -553,7 +555,7 @@ function runApp(BOOT) {
   }
 
   function stamp(ctx, w, h) {
-    const text = SHOP.name.toUpperCase() + '  ·  ' + fmt(new Date());
+    const text = DISPLAY_NAME.toUpperCase() + '  ·  ' + fmt(new Date());
     let size = Math.max(14, Math.round(w * 0.028));
     const family = ' system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif';
     ctx.font = '700 ' + size + 'px' + family;
@@ -705,16 +707,16 @@ function runApp(BOOT) {
     } else {
       $('doneText').textContent = 'The PDF is on its way to ' + res.email + '. It usually arrives within a minute. If you can\'t see it, check your spam folder.';
     }
-    $('doneId').textContent = 'Report ' + res.reportId + ' · ' + SHOP.name + ' · ' + NIGHT.label;
+    $('doneId').textContent = 'Report ' + res.reportId + ' · ' + DISPLAY_NAME + ' · ' + NIGHT.label;
     window.scrollTo(0, 0);
   }
 
   /* ---------- Start ---------- */
   function start() {
-    document.title = SHOP.name + ' · Close report';
+    document.title = DISPLAY_NAME + ' · Close report';
     $('form').hidden = false;
-    $('shopName').textContent = SHOP.name;
-    $('nightLabel').textContent = 'Nightly close · ' + NIGHT.label;
+    $('shopName').textContent = BUSINESS || SHOP.name;
+    $('nightLabel').textContent = BUSINESS ? 'Branch Name: ' + SHOP.name : 'Nightly close · ' + NIGHT.label;
     $('autoShop').textContent = SHOP.name;
     $('autoDate').textContent = NIGHT.label;
     $('demoNotice').hidden = !DEMO;
